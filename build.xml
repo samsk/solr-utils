@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!--
+     ====================================================================== 
+     Tue Sep 13 22:05:59 CEST 2016
+
+     solr-utils
+     Helper utils for SOLR
+
+     Samuel Behan <samuel_._behan_(at)_dob_._sk>
+     ======================================================================
+-->
+<project name="solr-utils" default="default">
+  <description>
+            Helper utils for SOLR
+  </description>
+  <property name="src.dir" value="src"/>
+  <property name="build.dir" value="build"/>
+  <property name="dist.dir" value="dist"/>
+  <property name="lib.dir" value="libs"/>
+  <property name="solr.dir" value="${lib.dir}/solr"/>
+  <property name="lucene.dir" value="${lib.dir}/lucene"/>
+  <path id="lib.path">
+    <fileset dir="${solr.dir}">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <!-- ================================= 
+          target: default              
+         ================================= -->
+  <target name="default" depends="clean,compile,jar" description="--&gt; Provide simple paging mechanism">
+  </target>
+  <!-- - - - - - - - - - - - - - - - - - 
+          target: depends                      
+         - - - - - - - - - - - - - - - - - -->
+  <target name="depends">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+  </target>
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}"/>
+  </target>
+  <!-- ================================= 
+          target: compile              
+         ================================= -->
+  <target name="compile" depends="depends" description="--&gt; Compile solr-utils sources">
+    <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="lib.path" debug="on" includeantruntime="false">
+ <!--     <compilerarg value="-Xlint:unchecked"/> -->
+    </javac>
+  </target>
+  <!-- - - - - - - - - - - - - - - - - - 
+          target: jar                      
+         - - - - - - - - - - - - - - - - - -->
+  <target name="jar">
+    <jar destfile="${dist.dir}/${ant.project.name}.jar" basedir="${build.dir}"/>
+  </target>
+
+</project>
