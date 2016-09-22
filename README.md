@@ -10,7 +10,8 @@ Various SOLR utils used by [dob.sk](https://dob.sk) services
      - Set ``transformer="sk.dob.search.solr.dih.SQLArrayTransformer"``
      - Return array from ``query="select 1 AS id, ARRAY['sk', 'cz', 'en'] AS lang;"``
      - Add ``<field name="lang">``
-  
+
+* [scripts for Nginx Lua module](lua)
 
 # Installation
 * Download & unpack or compile as needed
