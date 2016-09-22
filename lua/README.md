@@ -1,7 +1,7 @@
 # solr-utils (LUA)
 Lua scripts mainly for use within [Nginx Lua module](https://github.com/openresty/lua-nginx-module)
 
-# solr_args.lua
+## solr_args.lua
 * **solr_args** for proxying frontent arguments to SOLR backed
   
   **Example usage (nginx config):**
@@ -26,11 +26,11 @@ Lua scripts mainly for use within [Nginx Lua module](https://github.com/openrest
   proxy_pass http://solr6_server;
   ```
 
+
+## web_args.lua
+* **web_args** for building url argument string
+
 # Installation
 * Download & unpack as needed
 * Specify lua package path, i.e.:
     ``lua_package_path '/www/_lib/lua/?.lua';``
-
-# web_args.lua
-* **web_args** for building url argument string
-
