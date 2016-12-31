@@ -8,9 +8,9 @@ Various SOLR utils used by [dob.sk](https://dob.sk) services
   - fields declared with sql-array="1" will be splitted
 
   **Example usage:**
-     - Set ``transformer="sk.dob.search.solr.dih.SQLArrayTransformer"``
-     - Return array from ``query="select 1 AS id, ARRAY['sk', 'cz', 'en'] AS lang;"``
-     - Add ``<field name="lang" sql-array="1">``
+     - Set: transformer="sk.dob.search.solr.dih.SQLArrayTransformer"
+     - Return array from: query="select 1 AS id, ARRAY['sk', 'cz', 'en'] AS lang;"
+     - Add <field name="lang" sql-array="1"/>
 
 # [Scripts for Nginx Lua module](lua)
 
