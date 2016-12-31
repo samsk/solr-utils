@@ -1,6 +1,7 @@
 -- solr module
 local solr_args = {
-	args = {}
+	args = {},
+	arg_q = 'q',
 }
 solr_args.__index = solr_args
 
@@ -45,9 +46,19 @@ function solr_args.arg_number(arg, value, def)
 end
 
 ----
+-- query_param
+function solr_args.query_param(param)
+	solr_args.arg_q = param
+	return solr_args
+end
+
+----
 -- q=
-function solr_args.query(value, def)
-	return solr_args.arg('q', value, def)
+function solr_args.query(value, def, prefix)
+	if value ~= nil and prefix ~= nil then
+		value = prefix .. value
+	end
+	return solr_args.arg(solr_args.arg_q, value, def)
 end
 
 ----
@@ -56,18 +67,32 @@ function solr_args.wildcard_query(value)
 	if value ~= nil then
 		value = value .. '*'
 	end
-	return solr_args.arg('q', value)
+	return solr_args.arg(solr_args.arg_q, value)
 end
 
 ----
 -- q=*
-function solr_args.quote_query(value)
+function solr_args.quote_query(value, prefix)
 	if value ~= nil then
+		if prefix ~= nil then
+			value = prefix .. value
+		end
 		value = '"' .. value .. '"'
 	end
-	return solr_args.arg('q', value)
+	return solr_args.arg(solr_args.arg_q, value)
 end
 
+----
+-- q=field:*
+function solr_args.field_query(field, value, prefix)
+	if value ~= nil then
+		if prefix ~= nil then
+			value = prefix .. value
+		end
+		value = field .. ':"' .. value .. '"'
+	end
+	return solr_args.arg(solr_args.arg_q, value)
+end
 
 ----
 -- start=
@@ -97,7 +122,7 @@ end
 ----
 -- fq=
 function solr_args.filter(arg, fq, value)
-	if value ~= nil then
+	if value ~= nil and value ~= '' then
 		solr_args.args[arg] = value
 		if solr_args.args['fq'] == nil then
 			solr_args.args['fq'] = {}
@@ -110,7 +135,7 @@ end
 ----
 -- fq=
 function solr_args.filter_day_range(arg, fq, value)
-	if value ~= nil then
+	if value ~= nil and value ~= '' then
 		solr_args.args[arg] = value
 		if solr_args.args['fq'] == nil then
 			solr_args.args['fq'] = {}

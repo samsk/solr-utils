@@ -5,12 +5,12 @@ Various SOLR utils used by [dob.sk](https://dob.sk) services
 
 ### **SQLArrayTransformer** for SOLR DataImportHandler (sk.dob.search.solr.dih.SQLArrayTransformer)
   - split array returned from SQL query (tested with PostgresSQL)
-  - fields declared with &lt;field> will be splitted
+  - fields declared with sql-array="1" will be splitted
 
   **Example usage:**
      - Set ``transformer="sk.dob.search.solr.dih.SQLArrayTransformer"``
      - Return array from ``query="select 1 AS id, ARRAY['sk', 'cz', 'en'] AS lang;"``
-     - Add ``<field name="lang">``
+     - Add ``<field name="lang" sql-array="1">``
 
 # [Scripts for Nginx Lua module](lua)
 

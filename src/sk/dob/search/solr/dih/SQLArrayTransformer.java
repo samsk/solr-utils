@@ -14,6 +14,11 @@ public class SQLArrayTransformer extends Transformer {
 		List<Map<String, String>> fields = context.getAllEntityFields();
 
 		for (Map<String, String> field : fields) {
+			/* transform if sql-array=1 */
+			String transform = field.get("sql-array");
+			if (transform == null || !transform.equals("1"))
+				continue;
+
 			List<String> list = new ArrayList<String>();
 				
 			String column = field.get(DataImporter.COLUMN);
