@@ -1,4 +1,4 @@
--- solr module
+-- solr_args module
 local solr_args = {
 	args = {},
 	arg_q = 'q',
@@ -18,8 +18,14 @@ local web_args = require "web_args"
 function solr_args._init(init)
 end
 
+function solr_args.init(obj)
+--	solr_args.args = solr_args:obj
+	--solr_args.arg_q = obj.arg_q
+	return solr_args
+end
+
 function solr_args.reset()
-	solr_args.args = {}
+	solr_args.args = { wt='xml' }
 	return solr_args
 end
 
@@ -50,6 +56,19 @@ end
 function solr_args.query_param(param)
 	solr_args.arg_q = param
 	return solr_args
+end
+
+
+----
+-- df=
+function solr_args.query_field(field)
+	return solr_args.arg('df', field)
+end
+
+----
+-- fl=
+function solr_args.result_field(field)
+	return solr_args.arg('fl', field)
 end
 
 ----
@@ -146,11 +165,34 @@ function solr_args.filter_day_range(arg, fq, value)
 end
 
 ----
+-- fq=
+function solr_args.filter_hour_range(arg, fq, value)
+	if value ~= nil and value ~= '' then
+		solr_args.args[arg] = value
+		if solr_args.args['fq'] == nil then
+			solr_args.args['fq'] = {}
+		end
+		solr_args.args['fq'][arg] = fq .. ':' .. '[NOW-' .. value .. 'HOUR%20TO%20NOW]'
+	end
+	return solr_args
+end
+
+----
 -- wt=
 function solr_args.output(out)
 	solr_args.args['wt'] = out
 	return solr_args
 end
+
+----
+-- wt=xml
+function solr_args.output_json(enabled)
+	if enabled then
+		solr_args.args['wt'] = 'xml'
+	end
+	return solr_args
+end
+
 
 ----
 -- wt=json
