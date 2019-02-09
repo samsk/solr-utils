@@ -43,7 +43,7 @@ function web_args.add_array(tab, arr)
 end
 
 function web_args.build(tab)
-	return table.concat(tab, '&')
+	return string.gsub(table.concat(tab, '&'), ' ', '%%20')
 end
 
 return web_args

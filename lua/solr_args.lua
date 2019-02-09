@@ -142,39 +142,100 @@ end
 -- fq=
 function solr_args.filter(arg, fq, value)
 	if value ~= nil and value ~= '' then
-		solr_args.args[arg] = value
 		if solr_args.args['fq'] == nil then
 			solr_args.args['fq'] = {}
 		end
-		solr_args.args['fq'][arg] = fq .. ':' .. value
+		if type(value) == "table" then
+			solr_args.args[arg] = table.concat(value, ',')
+			solr_args.args['fq'][arg] = fq .. ':("' .. table.concat(value, '" "') .. '")'
+		else
+			solr_args.args[arg] = value
+			solr_args.args['fq'][arg] = fq .. ':"' .. value .. '"'
+		end
+	end
+	return solr_args
+end
+
+----
+-- fq=*
+function solr_args.filter_range(arg, fq, valueFrom, valueTo)
+	if (valueFrom ~= nil or valueTo ~= nil) then
+		if valueFrom == nil or valueFrom == '' then
+			valueFrom = '*'
+		end
+		if valueTo == nil or valueTo == '' then
+			valueTo = '*'
+		end
+
+		if valueTo ~= '*' or valueFrom ~= '*' then
+			solr_args.args[arg] = valueFrom .. ':' .. valueTo
+			if solr_args.args['fq'] == nil then
+				solr_args.args['fq'] = {}
+			end
+			solr_args.args['fq'][arg] = fq .. ':[' .. valueFrom .. ' TO ' .. valueTo .. ']'
+		end
 	end
 	return solr_args
 end
 
 ----
 -- fq=
+function solr_args.filter_datetime_from(arg, fq, value)
+	if value ~= nil and value ~= '' then
+		solr_args.args[arg] = value
+		if solr_args.args['fq'] == nil then
+			solr_args.args['fq'] = {}
+		end
+		solr_args.args['fq'][arg] = fq .. ':' .. '[' .. value .. ' TO NOW]'
+	end
+	return solr_args
+end
+
+----
+-- fq=
+function solr_args.filter_date_from(arg, fq, value)
+	if value ~= nil and value ~= '' then
+		solr_args.args[arg] = value
+		if solr_args.args['fq'] == nil then
+			solr_args.args['fq'] = {}
+		end
+		solr_args.args['fq'][arg] = fq .. ':' .. '[' .. value .. 'T00:00:00Z TO NOW]'
+	end
+	return solr_args
+end
+
+----
+-- fq=
+function solr_args.filter_day_from(arg, fq, value)
+	if value ~= nil and value ~= '' then
+		solr_args.args[arg] = value
+		if solr_args.args['fq'] == nil then
+			solr_args.args['fq'] = {}
+		end
+		solr_args.args['fq'][arg] = fq .. ':' .. '[NOW-' .. value .. 'DAY TO NOW]'
+	end
+	return solr_args
+end
+-- compat, remove after 2020-01-01
 function solr_args.filter_day_range(arg, fq, value)
-	if value ~= nil and value ~= '' then
-		solr_args.args[arg] = value
-		if solr_args.args['fq'] == nil then
-			solr_args.args['fq'] = {}
-		end
-		solr_args.args['fq'][arg] = fq .. ':' .. '[NOW-' .. value .. 'DAY%20TO%20NOW]'
-	end
-	return solr_args
+	return solr_args.filter_day_from(arg, fq, value)
 end
 
 ----
 -- fq=
-function solr_args.filter_hour_range(arg, fq, value)
+function solr_args.filter_hour_from(arg, fq, value)
 	if value ~= nil and value ~= '' then
 		solr_args.args[arg] = value
 		if solr_args.args['fq'] == nil then
 			solr_args.args['fq'] = {}
 		end
-		solr_args.args['fq'][arg] = fq .. ':' .. '[NOW-' .. value .. 'HOUR%20TO%20NOW]'
+		solr_args.args['fq'][arg] = fq .. ':' .. '[NOW-' .. value .. 'HOUR TO NOW]'
 	end
 	return solr_args
+end
+-- compat, remove after 2020-01-01
+function solr_args.filter_hour_range(arg, fq, value)
+	return solr_args.filter_hour_from(arg, fq, value)
 end
 
 ----
