@@ -73,17 +73,34 @@ end
 
 ----
 -- q=
-function solr_args.query(value, def, prefix)
-	if value ~= nil and prefix ~= nil then
-		value = prefix .. value
+function solr_args.query(arg, value, def)
+	if value ~= nil and value ~= '' then
+		if arg ~= nil then
+			solr_args.args[arg] = value
+		end
+		return solr_args.arg(solr_args.arg_q, value, def)
+	elseif def ~= nil then
+		return solr_args.arg(solr_args.arg_q, value, def)
+	end
+	return solr_args
+end
+
+----
+-- q=
+function solr_args.any_query(arg, value, def)
+	if arg ~= nil then
+		solr_args.args[arg] = value
 	end
 	return solr_args.arg(solr_args.arg_q, value, def)
 end
 
 ----
 -- q=*
-function solr_args.wildcard_query(value)
+function solr_args.wildcard_query(arg, value)
 	if value ~= nil then
+		if arg ~= nil then
+			solr_args.args[arg] = value
+		end
 		value = value .. '*'
 	end
 	return solr_args.arg(solr_args.arg_q, value)
@@ -91,10 +108,10 @@ end
 
 ----
 -- q=*
-function solr_args.quote_query(value, prefix)
+function solr_args.quoted_query(arg, value)
 	if value ~= nil then
-		if prefix ~= nil then
-			value = prefix .. value
+		if arg ~= nil then
+			solr_args.args[arg] = value
 		end
 		value = '"' .. value .. '"'
 	end
@@ -103,10 +120,10 @@ end
 
 ----
 -- q=field:*
-function solr_args.field_query(field, value, prefix)
+function solr_args.field_query(arg, field, value)
 	if value ~= nil then
-		if prefix ~= nil then
-			value = prefix .. value
+		if arg ~= nil then
+			solr_args.args[arg] = value
 		end
 		value = field .. ':"' .. value .. '"'
 	end
