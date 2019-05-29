@@ -34,3 +34,6 @@ Lua scripts mainly for use within [Nginx Lua module](https://github.com/openrest
 * Download & unpack as needed
 * Specify lua package path, i.e.:
     ``lua_package_path '/www/_lib/lua/?.lua';``
+
+# How-To
+* [Proxying SOLR with NGINX and Lua](https://blog.dob.sk/2019/03/15/exposing-solr-search-api-securely-with-nginx-and-lua/)
