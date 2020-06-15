@@ -96,10 +96,13 @@ end
 
 ----
 -- q=*
-function solr_args.wildcard_query(arg, value)
+function solr_args.wildcard_query(arg, value, wildprefix)
 	if value ~= nil then
 		if arg ~= nil then
 			solr_args.args[arg] = value
+		end
+		if wildprefix ~= nil and wildprefix then
+			value = '*' .. value
 		end
 		value = value .. '*'
 	end
@@ -157,20 +160,30 @@ end
 
 ----
 -- fq=
-function solr_args.filter(arg, fq, value)
+function solr_args.filter_raw(arg, fq, value, cb)
 	if value ~= nil and value ~= '' then
 		if solr_args.args['fq'] == nil then
 			solr_args.args['fq'] = {}
 		end
-		if type(value) == "table" then
-			solr_args.args[arg] = table.concat(value, ',')
-			solr_args.args['fq'][arg] = fq .. ':("' .. table.concat(value, '" "') .. '")'
-		else
-			solr_args.args[arg] = value
-			solr_args.args['fq'][arg] = fq .. ':"' .. value .. '"'
+		if type(value) ~= "table" then
+			value = { value }
 		end
+
+		solr_args.args[arg] = table.concat(value, ',')
+		if cb ~= nil then
+			for k,v in pairs(value) do
+				value[k] = cb(v)
+			end
+		end
+		solr_args.args['fq'][arg] = fq .. ':(' .. table.concat(value, ' ') .. ')'
 	end
 	return solr_args
+end
+
+----
+-- fq=
+function solr_args.filter(arg, fq, value)
+	return solr_args.filter_raw(arg, fq, value, function(v) return v end)
 end
 
 ----
