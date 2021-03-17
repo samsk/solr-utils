@@ -160,7 +160,7 @@ end
 
 ----
 -- fq=
-function solr_args.filter_raw(arg, fq, value, cb)
+function solr_args.filter_raw(arg, fq, value, cb, op)
 	if value ~= nil and value ~= '' then
 		if solr_args.args['fq'] == nil then
 			solr_args.args['fq'] = {}
@@ -175,9 +175,21 @@ function solr_args.filter_raw(arg, fq, value, cb)
 				value[k] = cb(v)
 			end
 		end
-		solr_args.args['fq'][arg] = fq .. ':(' .. table.concat(value, ' ') .. ')'
+
+		glue = ' '
+		if op ~= nil then
+			glue = ' ' .. op .. ' '
+		end
+
+		solr_args.args['fq'][arg] = fq .. ':(' .. table.concat(value, glue) .. ')'
 	end
 	return solr_args
+end
+
+----
+-- fq=
+function solr_args.filter_raw_and(arg, fq, value, cb)
+	return solr_args.filter_raw(arg, fq, value, cb, 'AND')
 end
 
 ----
