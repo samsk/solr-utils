@@ -337,12 +337,12 @@ function solr_args.filter_day_range(arg, fq, valueFrom, valueTo)
 		if valueFrom == nil or valueFrom == '' then
 			valueFrom = '*'
 		else
-			valueFrom = valueFrom .. ' DAYS'
+			valueFrom = 'NOW-' .. valueFrom .. 'DAY'
 		end
 		if valueTo == nil or valueTo == '' then
 			valueTo = '*'
 		else
-			valueTo = valueTo .. ' DAYS'
+			valueTo = 'NOW-' .. valueTo .. 'DAY'
 		end
 
 		if valueTo ~= '*' or valueFrom ~= '*' then
