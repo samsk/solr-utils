@@ -332,7 +332,7 @@ function solr_args.filter_day_from(arg, fq, value)
 	return solr_args
 end
 
-function solr_args.filter_day_range(arg, fq, valueFrom, valueTo)
+function solr_args.filter_day_range(arg, fq, valueTo, valueFrom)
 	if (valueFrom ~= nil or valueTo ~= nil) then
 		if valueFrom == nil or valueFrom == '' then
 			valueFrom = '*'
